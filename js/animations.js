@@ -113,7 +113,7 @@ function think(uc, c, dc) {
     return [
         {element: getRandomElement(elements), text: 'Вместе выясним', to: 1, timeout: 1000, blink: true},
         {element: getRandomElement(elements), text: 'как стать действительно анонимным', to: 1, timeout: 1000, blink: true},
-        {element: getRandomElement(elements), text: 'и как сохранить тайну переписки', to: 1, timeout: 1000, blink: true},
+        {element: getRandomElement(elements), text: 'и сохранить тайну переписки', to: 1, timeout: 1000, blink: true},
 
         {element: getRandomElement(elements), text: '...', to: 0, timeout: 1000},
 

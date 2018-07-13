@@ -1,59 +1,94 @@
+$(window).on("load", function () {
+    entry();
+});
+
 function entry() {
-    let browser = 'Browser name: ' + visitor.browser.name + ' ' + visitor.browser.versionMajor + '.' + visitor.browser.versionMinor;
+    let up_left_corner = $('#text21');
+    let up_center = $('#text22');
+    let up_right_corner = $('#text23');
 
-    let device = 'Device: ' + visitor.device.name + ' : ' + visitor.device.screen.resolution + ' - ' + visitor.device.screen.width + 'x' + visitor.device.screen.height;
+    let center = $('#text32');
 
-    let geo = 'Geo: ' + visitor.geo.continentName + ' (' + visitor.geo.continentCode + '), '
-        + visitor.geo.countryName + ' (' + visitor.geo.countryCode + '), '
-        + visitor.geo.city + ' [' + visitor.geo.coordinates.latitude + ' - ' + visitor.geo.coordinates.longitude + ']';
+    let down_left_corner = $('#text41');
+    let down_center = $('#text42');
+    let down_right_corner = $('#text43');
 
-    let ip = 'IP address: ' + visitor.ip.address;
 
-    let locale = 'Locale: ' + visitor.locale.countryCode + ' ' + visitor.locale.languageCode;
+    let down_down_center = $('#text52');
 
-    let os = 'OS: ' + visitor.os.name + ' ' + visitor.os.version;
+    schedule([]
+        .concat(
+            internet(center)
+        )
+        .concat(
+            questions(
+                up_center,
+                center,
+                down_center)
+        )
+        .concat(
+            information(
+                up_left_corner, up_right_corner,
+                center,
+                down_left_corner, down_right_corner)
+        )
+        .concat(
+            think(
+                up_center,
+                center,
+                down_center)
+        )
+        .concat(
+            address(
+                center,
+                down_down_center)
+        )
+    );
 }
 
-function animate(element, text, opacity_from, opacity_to, callback) {
-    let $element = $(element);
-    $element.text(text);
-
-    let timeout = 1500;
-
-    $element.animate({
-        opacity: opacity_from,
-    }, timeout, function () {
-        $element.animate({
-            opacity: opacity_to,
-        }, timeout, callback);
-    });
-}
-
-function schedule(element, lines) {
-    let size = lines.length;
+function schedule(tasks) {
+    let size = tasks.length;
 
     let chain = new Array(size);
     chain[size - 1] = function () {
-        animate(element, lines[size - 1], 1, 0);
+        let task = tasks[size - 1];
+        animate(task.element, task.text, task.to, task.timeout, task.blink);
     };
 
     for (let index = size - 2; index >= 0; index--) {
         chain[index] = function () {
-            animate(element, lines[index], 1, 0, chain[index + 1]);
+            let task = tasks[index];
+            animate(task.element, task.text, task.to, task.timeout, task.blink, chain[index + 1]);
         }
     }
 
     chain[0](); // start chain
 }
 
-$(window).on("load", function() {
-    entry();
+function animate(element, text, opacity_to, timeout, blink, callback) {
+    element.html(text);
 
-    schedule($('#text'), [
-        'Свободный интернет',
-        'Свободный интернет',
-        'Свободный интернет',
-        '16 июля, 19:00',
-        'Get Together'
-    ]);
-});
+    element.animate({
+        opacity: opacity_to,
+    }, timeout, function () {
+        if (blink) {
+            element.animate({
+                opacity: Math.max(0, 1 - Math.ceil(opacity_to)),
+            }, timeout, callback);
+        } else {
+            callback();
+        }
+    });
+}
+
+function shuffle(array) {
+    for (let index = array.length - 1; index > 0; index--) {
+        const jndex = Math.floor(Math.random() * (index + 1));
+        [array[index], array[jndex]] = [array[jndex], array[index]];
+    }
+    return array;
+}
+
+function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)]
+}

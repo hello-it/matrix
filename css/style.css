@@ -33,7 +33,7 @@ body {
     height: 100%;
 }
 
-#text {
+p {
     opacity: 0;
     font-family: 'Cormorant', cursive;
     font-size: 40px;
